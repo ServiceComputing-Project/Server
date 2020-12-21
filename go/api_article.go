@@ -23,97 +23,6 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-func DeleteArticleById(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("call deletr")
-	//connect to database
-	db, err := bolt.Open("my.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	//  /user/article/{id}
-	articleId := strings.Split(r.URL.Path, "/")[4]
-
-	//	string to int
-	Id, err := strconv.Atoi(articleId)
-	fmt.Println(Id)
-	if err != nil {
-		response := ErrorResponse{"Wrong ArticleId"}
-		JsonResponse(response, w, http.StatusBadRequest)
-		return
-	}
-
-	//delete the article by ID
-	err = db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("Article"))
-		if b != nil {
-			c := b.Cursor()
-			c.Seek(itob(Id))
-			err := c.Delete()
-			if err != nil {
-				return errors.New("Delete article failed")
-			}
-		} else {
-			return errors.New("Article Not Exists")
-		}
-		return nil
-	})
-
-	if err != nil {
-		response := ErrorResponse{err.Error()}
-		JsonResponse(response, w, http.StatusNotFound)
-		return
-	}
-	JsonResponse("", w, http.StatusOK)
-}
-
-func GetArticleById(w http.ResponseWriter, r *http.Request) {
-	//connect to database
-	db, err := bolt.Open("my.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	//  /user/article/{id}
-	articleId := strings.Split(r.URL.Path, "/")[4]
-
-	//	string to int
-	Id, err := strconv.Atoi(articleId)
-	fmt.Println(Id)
-	if err != nil {
-		reponse := ErrorResponse{"Wrong ArticleId"}
-		JsonResponse(reponse, w, http.StatusBadRequest)
-		return
-	}
-
-	//query the article by ID
-	var article Article
-	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("Article"))
-		if b != nil {
-			v := b.Get(itob(Id))
-			if v == nil {
-				return errors.New("Article Not Exists")
-			} else {
-				_ = json.Unmarshal(v, &article)
-				return nil
-			}
-		} else {
-			return errors.New("Article Not Exists")
-		}
-	})
-
-	if err != nil {
-		response := ErrorResponse{err.Error()}
-		JsonResponse(response, w, http.StatusNotFound)
-		return
-	}
-
-	JsonResponse(article, w, http.StatusOK)
-}
-
 //  /user/articles
 //  http://localhost:8080/user/articles?page=1
 func GetArticles(w http.ResponseWriter, r *http.Request) {
@@ -186,3 +95,97 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(string(json))
 	JsonResponse(articles, w, http.StatusOK)
 }
+
+func GetArticleById(w http.ResponseWriter, r *http.Request) {
+	//connect to database
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	//  /user/article/{id}
+	articleId := strings.Split(r.URL.Path, "/")[4]
+
+	//	string to int
+	Id, err := strconv.Atoi(articleId)
+	fmt.Println(Id)
+	if err != nil {
+		reponse := ErrorResponse{"Wrong ArticleId"}
+		JsonResponse(reponse, w, http.StatusBadRequest)
+		return
+	}
+
+	//query the article by ID
+	var article Article
+	err = db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("Article"))
+		if b != nil {
+			v := b.Get(itob(Id))
+			if v == nil {
+				return errors.New("Article Not Exists")
+			} else {
+				_ = json.Unmarshal(v, &article)
+				return nil
+			}
+		} else {
+			return errors.New("Article Not Exists")
+		}
+	})
+
+	if err != nil {
+		response := ErrorResponse{err.Error()}
+		JsonResponse(response, w, http.StatusNotFound)
+		return
+	}
+
+	JsonResponse(article, w, http.StatusOK)
+}
+
+func DeleteArticleById(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("call deletr")
+	//connect to database
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	//  /user/article/{id}
+	articleId := strings.Split(r.URL.Path, "/")[4]
+
+	//	string to int
+	Id, err := strconv.Atoi(articleId)
+	fmt.Println(Id)
+	if err != nil {
+		response := ErrorResponse{"Wrong ArticleId"}
+		JsonResponse(response, w, http.StatusBadRequest)
+		return
+	}
+
+	//delete the article by ID
+	err = db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("Article"))
+		if b != nil {
+			c := b.Cursor()
+			c.Seek(itob(Id))
+			err := c.Delete()
+			if err != nil {
+				return errors.New("Delete article failed")
+			}
+		} else {
+			return errors.New("Article Not Exists")
+		}
+		return nil
+	})
+
+	if err != nil {
+		response := ErrorResponse{err.Error()}
+		JsonResponse(response, w, http.StatusNotFound)
+		return
+	}
+	JsonResponse("", w, http.StatusOK)
+}
+
+
+
