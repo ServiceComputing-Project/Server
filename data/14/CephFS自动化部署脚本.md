@@ -182,3 +182,5 @@ mount -t ceph $ceph_1_name:6789,$ceph_2_name:6789,$ceph_3_name:6789:/ /mnt/mycep
 ```
 nohup ./deploy.sh > deploy.log 2>&1 &
 ```
+
+#### 本文连接： https://www.jianshu.com/p/5ca7990db0f1
