@@ -4,7 +4,7 @@
  * API version: 1.0.0
  */
 
-package t
+package test
 
 import (
 	"encoding/binary"
