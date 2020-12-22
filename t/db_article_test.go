@@ -131,11 +131,10 @@ func DeleteArticleById(id int) {
 			c.Seek(itob(id))
 			err := c.Delete()
 			if err != nil {
-				//log.Fatal(err)
 				return errors.New("删除文章出错！")
 			}
 		} else {
-			//fmt.Println("Article Not Exists")
+			fmt.Println("文章不存在！")
 			return errors.New("文章不存在！")
 		}
 		return nil
