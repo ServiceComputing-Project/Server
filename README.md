@@ -2,10 +2,18 @@
 
 # 客户端项目：Go API Server for swagger
 
+## 程序包功能
+实现简单的blog，含有注册登录功能，和查看文章以及进行评论的功能。
+
+## 软件架构
+**go文件夹**：具体实现，包含comment、user、article三个部分的实现。
+**t文件夹**：所有函数实现的对应测试文件。
+**data文件夹**：从网络抓取的公开技术文章内容和相应评论信息。
+
+
 ## 安装与运行
 
-执行如下命令进行安装
-
+执行如下命令进行安装：
 
 ```
 # 安装 Bolt DB
@@ -21,7 +29,7 @@ go get -u github.com/gorilla/mux
 go get -v github.com/ServiceComputing-Project/Server
 ```
 
-执行如下命令运行
+执行如下命令运行：
 
 ```
 go run main.go
