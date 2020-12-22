@@ -64,7 +64,7 @@ http://localhost:8080/signin
 * ### getArticleById
 
 ```
-http://localhost:8080/simpleblog/user/article/1
+http://localhost:8080/articleList
 ```
 
 * ### getArticles
