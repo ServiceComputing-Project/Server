@@ -26,6 +26,52 @@ var ErrIndex = errors.New("页面索引出错！")
 var ErrArticle = errors.New("文章不存在！")
 var ErrDelete = errors.New("删除文章失败！")
 
+func GetArticleById(w http.ResponseWriter, r *http.Request) {
+	//connect to database
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	//  /user/article/{id}
+	articleId := strings.Split(r.URL.Path, "/")[4]
+
+	//	string to int
+	Id, err := strconv.Atoi(articleId)
+	fmt.Println(Id)
+	if err != nil {
+		reponse := ErrorResponse{"ArticleId错误！"}
+		JsonResponse(reponse, w, http.StatusBadRequest)
+		return
+	}
+
+	//query the article by ID
+	var article Article
+	err = db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("Article"))
+		if b != nil {
+			v := b.Get(itob(Id))
+			if v == nil {
+				return ErrArticle
+			} else {
+				_ = json.Unmarshal(v, &article)
+				return nil
+			}
+		} else {
+			return ErrArticle
+		}
+	})
+
+	if err != nil {
+		response := ErrorResponse{err.Error()}
+		JsonResponse(response, w, http.StatusNotFound)
+		return
+	}
+
+	JsonResponse(article, w, http.StatusOK)
+}
+
 //  /user/articles
 //  http://localhost:8080/user/articles?page=1
 func GetArticles(w http.ResponseWriter, r *http.Request) {
@@ -97,52 +143,6 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	json, err := json.Marshal(articles)
 	fmt.Println(string(json))
 	JsonResponse(articles, w, http.StatusOK)
-}
-
-func GetArticleById(w http.ResponseWriter, r *http.Request) {
-	//connect to database
-	db, err := bolt.Open("my.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	//  /user/article/{id}
-	articleId := strings.Split(r.URL.Path, "/")[4]
-
-	//	string to int
-	Id, err := strconv.Atoi(articleId)
-	fmt.Println(Id)
-	if err != nil {
-		reponse := ErrorResponse{"ArticleId错误！"}
-		JsonResponse(reponse, w, http.StatusBadRequest)
-		return
-	}
-
-	//query the article by ID
-	var article Article
-	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("Article"))
-		if b != nil {
-			v := b.Get(itob(Id))
-			if v == nil {
-				return ErrArticle
-			} else {
-				_ = json.Unmarshal(v, &article)
-				return nil
-			}
-		} else {
-			return ErrArticle
-		}
-	})
-
-	if err != nil {
-		response := ErrorResponse{err.Error()}
-		JsonResponse(response, w, http.StatusNotFound)
-		return
-	}
-
-	JsonResponse(article, w, http.StatusOK)
 }
 
 func DeleteArticleById(w http.ResponseWriter, r *http.Request) {
