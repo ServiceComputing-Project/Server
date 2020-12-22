@@ -2,15 +2,7 @@
 
 ## flutter 生命周期相关函数的调用过程
 
-首先，先上一张图，这张图很简单明了的阐释了一个页面启动所要执行的widget方法流程：
-
-
-
-
-
-![img](https://upload-images.jianshu.io/upload_images/18813666-b8f11f404d93cb36.png?imageMogr2/auto-orient/strip|imageView2/2/w/485/format/webp)
-
-下面解释一下各个方法的作用：
+解释一下各个方法的作用：
 
 ### initState
 
@@ -171,6 +163,3 @@ class MyState extends State<StatefulWidget>{
 这时候我们就可以通过isVisible来判断当前页面是否可见了，以此来做一些操作。
 今年金九银十我花一个月的时间收录整理了一套知识体系，如果有想法深入的系统化的去学习的，可以点击[传送门](https://links.jianshu.com/go?to=https%3A%2F%2Fshimo.im%2Fdocs%2FkxRG3DxvRTkWhqc9%2F)，我会把我收录整理的资料都送给大家，帮助大家更快的进阶。
 
-
-
-![img](https://upload-images.jianshu.io/upload_images/18813666-21f1bdbabcf5a931.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/240/format/webp)

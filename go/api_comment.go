@@ -45,9 +45,11 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
+	//解析 url，取到参数 articleId
 	articleId := strings.Split(r.URL.Path, "/")[4]
 	fmt.Println("ArticleIdstring:", articleId)
 
+	// string to int
 	Id, err := strconv.Atoi(articleId)
 	if err != nil {
 		fmt.Println("Get Id failed")
@@ -56,6 +58,8 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//打开 article 表查找是否有文章 id 为该 Id 的文章，
+	//找到则显示文章的Id，否则返回相应的错误信息
 	var article Article
 	err = db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Article"))
@@ -79,6 +83,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("articleid:", article.Id)
 
+	//写新的评论，并判断它的合法性，如果正确则显示评论，错误则返回相应的错误信息
 	comment := Comment{
 		Date:      time.Now().Format("2006-01-02 15:04:05"),
 		Content:   "",
@@ -101,7 +106,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("comment:", comment)
 	}
 
-	//在对其他 API进行方法操作时，首先对于 request 请求的token进行解析
+	//先对request请求的token进行解析
 	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
 		func(token *jwt.Token) (interface{}, error) {
 			fmt.Println(token)
@@ -110,7 +115,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(token)
 
 	if err == nil {
-		//再通过以下方法做到服务端对于客户端保存当前登陆用户的 token 的校验
+		//通过以下方法做到服务端对于客户端保存当前登陆用户的 token 的校验
 		if token.Valid {
 			err = db.Update(func(tx *bolt.Tx) error {
 				b, err := tx.CreateBucketIfNotExists([]byte("Comment"))
@@ -144,9 +149,11 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 	//连接数据库
 	db, err := bolt.Open("my.db", 0600, nil)
-	fatal(err)
+    if err != nil {
+        log.Fatal(err)
+    }
 	defer db.Close()
-
+	
 	//解析 url，取到参数 Id
 	articleId := strings.Split(r.URL.Path, "/")[4]
 	temp, err := strconv.Atoi(articleId)
@@ -157,6 +164,7 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//解析 url，取到参数page
 	u, err := url.Parse(r.URL.String())
 	if err != nil {
 		log.Fatal(err)
@@ -165,6 +173,7 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 	page := m["page"][0]
 	index, err := strconv.Atoi(page)
 
+	//
 	var article []byte
 	err = db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Article"))
@@ -186,6 +195,9 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 		JsonResponse(response, w, http.StatusNotFound)
 		return
 	}
+
+	//打开 article 表查找是否有文章 id 为该 Id 的文章，
+	//找到则显示文章的Id，否则返回相应的错误信息
 	var comments Comments
 	var comment Comment
 	err = db.View(func(tx *bolt.Tx) error {
