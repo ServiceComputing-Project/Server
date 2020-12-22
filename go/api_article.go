@@ -157,7 +157,6 @@ func DeleteArticleById(w http.ResponseWriter, r *http.Request) {
 	//  /user/article/{id}
 	articleId := strings.Split(r.URL.Path, "/")[4]
 
-	//	string to int
 	Id, err := strconv.Atoi(articleId)
 	fmt.Println(Id)
 	if err != nil {
