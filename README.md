@@ -10,7 +10,7 @@
 
 **go文件夹**：具体实现，包含comment、user、article三个部分的实现。
 
-**t文件夹**：所有函数实现的对应测试文件。
+**test文件夹**：所有函数实现的对应测试文件。
 
 **data文件夹**：从网络抓取的公开技术文章内容和相应评论信息。
 
@@ -39,7 +39,7 @@ go get -v github.com/ServiceComputing-Project/Server
 go run main.go
 ```
 
-# 测试说明
+## 测试说明
 
 * ### signin，记得保存 token
 
@@ -81,11 +81,9 @@ http://localhost:8080/simpleblog/user/article/2/comments
 
 
 
-"token":"eyJhbGciOiJIUzI1NiIsInR5c
-                    CI6IkpXVCJ9.eyJleHAiOjE1NzU2OTQxOTY
-                    sImlhdCI6MTU3NTY5MDU5Nn0.ZOzLig7pRA
-                    tKTKlhR4e_uJlCEc5Ehn5FYlGMrQIouJQ"
-
-curl -H "Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzU2OTQxOTYsImlhdCI6MTU3NTY5MDU5Nn0.ZOzLig7pRAtKTKlhR4e_uJlCEc5Ehn5FYlGMrQIouJQ" http://localhost:8080/simpleblog/user/article/2/comment -X POST -d '{"content":"new content3","author":"user5"}'
-
-curl -H "Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzU2OTQxOTYsImlhdCI6MTU3NTY5MDU5Nn0.ZOzLig7pRAtKTKlhR4e_uJlCEc5Ehn5FYlGMrQIouJQ" http://localhost:8080/simpleblog/user/article/2/comment -X POST -d '{"content":"new content3","author":"user5"}'
+- "token":"eyJhbGciOiJIUzI1NiIsInR5c
+                      CI6IkpXVCJ9.eyJleHAiOjE1NzU2OTQxOTY
+                      sImlhdCI6MTU3NTY5MDU5Nn0.ZOzLig7pRA
+                      tKTKlhR4e_uJlCEc5Ehn5FYlGMrQIouJQ"
+- curl -H "Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzU2OTQxOTYsImlhdCI6MTU3NTY5MDU5Nn0.ZOzLig7pRAtKTKlhR4e_uJlCEc5Ehn5FYlGMrQIouJQ" http://localhost:8080/simpleblog/user/article/2/comment -X POST -d '{"content":"new content3","author":"user5"}'
+- curl -H "Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzU2OTQxOTYsImlhdCI6MTU3NTY5MDU5Nn0.ZOzLig7pRAtKTKlhR4e_uJlCEc5Ehn5FYlGMrQIouJQ" http://localhost:8080/simpleblog/user/article/2/comment -X POST -d '{"content":"new content3","author":"user5"}'
