@@ -16,7 +16,6 @@ Section header view 好像没有受到UITableView的改变而改变，一直停�
 应该还是我的代码的问题，开始筛选原因吧。
 
 
-
 ![img](https:////upload-images.jianshu.io/upload_images/1693553-4b58b2bea517797d.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 
 UITableViewWrapperView
