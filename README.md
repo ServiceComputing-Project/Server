@@ -49,10 +49,16 @@ go run main.go
 
 ## 测试说明
 
+* ### 首页
+
+```shell
+http://localhost:8080
+```
+
 * ### signin，记得保存 token
 
 ```shell
-http://localhost:8080/simpleblog/user/signin?username=user5&password=pass5
+http://localhost:8080/signin
 ```
 
 * ### getArticleById
