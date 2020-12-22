@@ -24,8 +24,21 @@ import (
 	"github.com/dgrijalva/jwt-go/request"
 )
 
+type UserSlice []Comment
+
+func (s UserSlice) Len() int {
+	return len(s)
+}
+func (s UserSlice) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s UserSlice) Less(i, j int) bool {
+	return s[i].Date > s[j].Date
+}
+
 func CreateComment(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("CreateComment")
+	//连接数据库
 	db, err := bolt.Open("my.db", 0600, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -88,6 +101,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("comment:", comment)
 	}
 
+	//在对其他 API进行方法操作时，首先对于 request 请求的token进行解析
 	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
 		func(token *jwt.Token) (interface{}, error) {
 			fmt.Println(token)
@@ -96,6 +110,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(token)
 
 	if err == nil {
+		//再通过以下方法做到服务端对于客户端保存当前登陆用户的 token 的校验
 		if token.Valid {
 			err = db.Update(func(tx *bolt.Tx) error {
 				b, err := tx.CreateBucketIfNotExists([]byte("Comment"))
@@ -127,10 +142,12 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 
 //  http://localhost:8080/user/article/1/comments?page=1
 func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
+	//连接数据库
 	db, err := bolt.Open("my.db", 0600, nil)
 	fatal(err)
 	defer db.Close()
 
+	//解析 url，取到参数 Id
 	articleId := strings.Split(r.URL.Path, "/")[4]
 	temp, err := strconv.Atoi(articleId)
 	var Id int = int(temp)
@@ -219,16 +236,4 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 
 	comments.Contents = comments.Contents[(index-1)*5 : end]
 	JsonResponse(comments, w, http.StatusOK)
-}
-
-type UserSlice []Comment
-
-func (s UserSlice) Len() int {
-	return len(s)
-}
-func (s UserSlice) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-func (s UserSlice) Less(i, j int) bool {
-	return s[i].Date > s[j].Date
 }

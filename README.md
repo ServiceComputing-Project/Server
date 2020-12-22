@@ -8,6 +8,16 @@
 
 
 ```
+# 安装 Bolt DB
+go get -u github.com/boltdb/bolt
+
+# 安装 JWT 模块
+go get -u github.com/dgrijalva/jwt-go
+
+# 安装执行http请求的路由和分发的第三方扩展包mux
+go get -u github.com/gorilla/mux
+
+# 安装项目
 go get -v github.com/ServiceComputing-Project/Server
 ```
 
