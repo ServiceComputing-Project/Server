@@ -6,7 +6,7 @@
 
 - [EmilyYoung9](https://github.com/orgs/ServiceComputing-Project/people/EmilyYoung9) 杨玲（18342115）
 - [Annecle](https://github.com/orgs/ServiceComputing-Project/people/Annecle)  周圆（18342143）
-- [beikenken](https://github.com/orgs/ServiceComputing-Project/people/beikenken) 张又方（）
+- [beikenken](https://github.com/orgs/ServiceComputing-Project/people/beikenken) 张又方（18342131）
 - [utaZ ](https://github.com/orgs/ServiceComputing-Project/people/utaZ) 邹文睿（18342146）
 
 ## 程序包功能
@@ -21,15 +21,6 @@
 
 **data文件夹**：从网络抓取的公开技术文章内容和相应评论信息。
 
-后端分工：
-
-EmilyYoung9 杨玲（18342115）
-
-Annecle 周圆（18342143）
-
-beikenken 张又方（18342131）
-
-utaZ 邹文睿（18342146）
 
 
 ## 安装与运行
