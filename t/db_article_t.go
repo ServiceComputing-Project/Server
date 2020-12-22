@@ -16,7 +16,7 @@ import (
 	"strconv"
 
 	// Change this to your own fully-qualified import path
-	sw "github.com/SYSU-SimpleBlog/Server/go"
+	sw "github.com/ServiceComputing-Project/Server/go"
 
 	"github.com/boltdb/bolt"
 )
