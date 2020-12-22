@@ -1,6 +1,6 @@
 
 
-# 客户端项目：Go API Server for swagger
+# 服务端项目：Go API Server for swagger
 
 ## 参与人员
 
