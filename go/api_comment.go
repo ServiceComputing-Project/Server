@@ -29,11 +29,11 @@ type UserSlice []Comment
 func (s UserSlice) Len() int {
 	return len(s)
 }
-func (s UserSlice) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
 func (s UserSlice) Less(i, j int) bool {
 	return s[i].Date > s[j].Date
+}
+func (s UserSlice) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
 }
 
 func CreateComment(w http.ResponseWriter, r *http.Request) {
