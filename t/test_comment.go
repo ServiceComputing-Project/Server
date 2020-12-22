@@ -30,7 +30,7 @@ import (
 	//    sw "github.com/myname/myrepo/go"
 	//
 
-	sw "github.com/SYSU-SimpleBlog/Server/go"
+	sw "github.com/ServiceComputing-Project/Server/go"
 
 	"github.com/boltdb/bolt"
 )
