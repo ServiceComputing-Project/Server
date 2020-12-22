@@ -1,16 +1,19 @@
-前言
+## 前言
 上次介绍了Spring Boot中Mybatis的简单整合，本篇深入来结合通用Mapper、Mybatis Geneator以及分页PageHelper来打造适合企业开发的模板框架。
-正文
+## 正文
 项目框架还是跟上一篇一样使用Spring Boot的ace后端模板，不过最近在使用vue，所以前端引用了vue进来改写，代码变得更加简洁。
-项目配置：
+## 项目配置：
 Spring Boot： 1.5.9.RELEASE
 Maven： 3.5
 Java： 1.8
 Thymeleaf： 3.0.7.RELEASE
 Vue.js： v2.5.11
-数据源依赖
+## 数据源依赖
 这里我们还是使用阿里巴巴的druid来当数据库连接池，发现这个有对应的监控界面，我们可以开启。
+
 druid官方文档：https://github.com/alibaba/druid/wiki/常见问题
+
+```
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -21,7 +24,7 @@ druid官方文档：https://github.com/alibaba/druid/wiki/常见问题
     <artifactId>druid</artifactId>
     <version>1.0.19</version>
 </dependency>
-
+```
 
 
 
@@ -32,12 +35,14 @@ druid官方文档：https://github.com/alibaba/druid/wiki/常见问题
 
 
 对应的application.properties配置：
+```
 ## 数据库访问配置
 spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
 spring.datasource.driver-class-name = com.mysql.jdbc.Driver
 spring.datasource.url = jdbc:mysql://localhost:3306/spring?useUnicode=true&characterEncoding=utf-8
 spring.datasource.username = root
 spring.datasource.password = root
+
 
 # 下面为连接池的补充设置，应用到上面所有数据源中
 # 初始化大小，最小，最大
@@ -61,36 +66,11 @@ spring.datasource.maxPoolPreparedStatementPerConnectionSize=20
 spring.datasource.filters=stat,wall,log4j
 # 合并多个DruidDataSource的监控数据
 #spring.datasource.useGlobalDataSourceStat=true
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 
 对应的bean配置：
+```
 package com.dudu.config;
 
 /**
@@ -238,154 +218,9 @@ public class DruidConfig {
         return wallFilter;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-mybatis相关依赖
+```
+## mybatis相关依赖
+```
 <!--mybatis-->
 <dependency>
     <groupId>org.mybatis.spring.boot</groupId>
@@ -449,74 +284,13 @@ mybatis相关依赖
         </plugin>
     </plugins>
 </build>
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-上面引入了mybatis相关的一些依赖以及generator的配置，这里generator配置文件指向
+上面引入了一些依赖以及generator的配置，这里generator配置文件指向
 src/main/resources/mybatis-generator.xml文件，具体一会贴出。
+
 对应的application.properties配置：
+```
 #指定bean所在包
 mybatis.type-aliases-package=com.dudu.domain
 #指定映射文件
@@ -533,25 +307,13 @@ pagehelper.helperDialect=mysql
 pagehelper.reasonable=true
 pagehelper.supportMethodsArguments=true
 pagehelper.params=count=countSql
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-通用Mapper配置
+```
+## 通用Mapper配置
 通用Mapper都可以极大的方便开发人员,对单表封装了许多通用方法，省掉自己写增删改查的sql。
+
 通用Mapper插件网址：https://github.com/abel533/Mapper
+
+```
 package com.dudu.util;
 
 import tk.mybatis.mapper.common.Mapper;
@@ -566,22 +328,12 @@ import tk.mybatis.mapper.common.MySqlMapper;
 public interface MyMapper<T> extends Mapper<T>, MySqlMapper<T> {
     //FIXME 特别注意，该接口不能被扫描到，否则会出错
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 这里实现一个自己的接口,继承通用的mapper，关键点就是这个接口不能被扫描到，不能跟dao这个存放mapper文件放在一起。
+
 最后在启动类中通过MapperScan注解指定扫描的mapper路径：
+```
 package com.dudu;
 @SpringBootApplication
 //启注解事务管理
@@ -592,19 +344,13 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 }
+```
 
-
-
-
-
-
-
-
-
-
-MyBatis Generator配置
+## MyBatis Generator配置
 这里配置一下上面提到的mybatis-generator.xml文件,该配置文件用来自动生成表对应的Model,Mapper以及xml,该文件位于src/main/resources下面
 Mybatis Geneator 详解: http://blog.csdn.net/isea533/article/details/42102297
+
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
@@ -668,80 +414,18 @@ Mybatis Geneator 详解: http://blog.csdn.net/isea533/article/details/42102297
         </table>
     </context>
 </generatorConfiguration>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 其中，我们通过<properties resource="application.properties"/>引入了配置文件，这样下面指定数据源的时候不用写死。
-其中tk.mybatis.mapper.generator.MapperPlugin很重要，用来指定通用Mapper对应的文件，这样我们生成的mapper都会继承这个通用Mapper
+
+其中tk.mybatis.mapper.generator.MapperPlugin很重要，用来指定通用Mapper对应的文件，这样我们生成的mapper都会继承这个通用Mapper。
+```
 <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
     <property name="mappers" value="com.dudu.util.MyMapper" />
   <!--caseSensitive默认false，当数据库表名区分大小写时，可以将该属性设置为true-->
   <property name="caseSensitive" value="true"/>
 </plugin>
-
-
-
-
+```
 
 这样就可以通过mybatis-generator插件生成对应的文件啦
 
