@@ -7,6 +7,6 @@
 package swagger
 
 type Body struct {
-	Content string `json:"content,omitempty"`
 	Author string `json:"author,omitempty"`
+	Content string `json:"content,omitempty"`
 }

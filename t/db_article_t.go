@@ -15,14 +15,7 @@ import (
 	"log"
 	"strconv"
 
-	// WARNING!
-	// Change this to a fully-qualified import path
-	// once you place this file into your project.
-	// For example,
-	//
-	//    sw "github.com/myname/myrepo/go"
-	//
-
+	// Change this to your own fully-qualified import path
 	sw "github.com/SYSU-SimpleBlog/Server/go"
 
 	"github.com/boltdb/bolt"
@@ -219,9 +212,6 @@ func DBTestArticle() {
 	CreateTable()
 	GetArticleById(1)
 	GetArticleById(5)
-	GetArticles(1) /*
-		DeleteArticleById(5)
-		GetArticleById(5)
-	*/
+	GetArticles(1)
 	CreateUser()
 }
