@@ -2,6 +2,13 @@
 
 # 客户端项目：Go API Server for swagger
 
+## 参与人员
+
+- [EmilyYoung9](https://github.com/orgs/ServiceComputing-Project/people/EmilyYoung9) 杨玲（18342115）
+- [Annecle](https://github.com/orgs/ServiceComputing-Project/people/Annecle)  周圆（18342143）
+- [beikenken](https://github.com/orgs/ServiceComputing-Project/people/beikenken) 张又方（）
+- [utaZ ](https://github.com/orgs/ServiceComputing-Project/people/utaZ) 邹文睿（18342146）
+
 ## 程序包功能
 
 实现简单的blog，含有注册登录功能、查看文章、查看评论及进行评论的功能。

@@ -173,7 +173,8 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 	page := m["page"][0]
 	index, err := strconv.Atoi(page)
 
-	//
+	//打开 article 表查找是否有文章 id 为该 Id 的文章，
+	//找到则返回该文章，否则返回相应的错误信息
 	var article []byte
 	err = db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Article"))
@@ -196,8 +197,8 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//打开 article 表查找是否有文章 id 为该 Id 的文章，
-	//找到则显示文章的Id，否则返回相应的错误信息
+	//查找该文章Id对应的评论
+	//符合要求则加入comments，否则返回错误信息
 	var comments Comments
 	var comment Comment
 	err = db.View(func(tx *bolt.Tx) error {
@@ -226,7 +227,8 @@ func GetCommentsOfArticle(w http.ResponseWriter, r *http.Request) {
 		JsonResponse(reponse, w, http.StatusNotFound)
 		return
 	}
-
+	
+	//计算评论长度和评论页数
 	contentsCount := len(comments.Contents)
 	comments.PageCount = contentsCount
 
