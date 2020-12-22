@@ -21,11 +21,6 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-func itob(v int) []byte {
-	b := make([]byte, 8)
-	binary.BigEndian.PutUint64(b, uint64(v))
-	return b
-}
 
 func CreateTable() {
 	db, err := bolt.Open("my.db", 0600, nil)
@@ -37,7 +32,7 @@ func CreateTable() {
 	err = db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Article"))
 		if b == nil {
-			//create table "xx" if not exits
+			//create table if not exits
 			b, err = tx.CreateBucket([]byte("Article"))
 			if err != nil {
 				log.Fatal(err)
@@ -68,12 +63,9 @@ func CreateTable() {
 				}
 				content, err := ioutil.ReadFile(path + "/" + articleName)
 				if err != nil {
-					fmt.Println("获取失败", err)
+					fmt.Println("获取文章内容失败！", err)
 					return err
 				}
-
-				//fmt.Println("文本内容为:", string(content))
-
 				title := articleName[:len(articleName)-3]
 				article = sw.Article{int32(i), title, tags, "2019", string(content)}
 				v, err := json.Marshal(article)
@@ -84,7 +76,7 @@ func CreateTable() {
 				}
 			}
 		} else {
-			return errors.New("Table Article doesn't exist")
+			return errors.New("列表文章不存在！")
 		}
 
 		return nil
@@ -110,18 +102,49 @@ func GetArticleById(id int) {
 		if b != nil {
 			v := b.Get(itob(id))
 			if v == nil {
-				fmt.Println(id, " Article Not Exists")
-				return errors.New("Article Not Exists")
+				fmt.Println(id, "文章不存在！")
+				return errors.New("文章不存在！")
 			} else {
 				_ = json.Unmarshal(v, &article)
 				return nil
 			}
 		} else {
-			fmt.Println("Article Not Exists")
-			return errors.New("Article Not Exists")
+			fmt.Println("文章不存在！")
+			return errors.New("文章不存在！")
 		}
 	})
-	//fmt.Println(article.Content)
+}
+
+func DeleteArticleById(id int) {
+	//connect to database
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	//delete the article by ID
+	err = db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("Article"))
+		if b != nil {
+			c := b.Cursor()
+			c.Seek(itob(id))
+			err := c.Delete()
+			if err != nil {
+				//log.Fatal(err)
+				return errors.New("删除文章出错！")
+			}
+		} else {
+			//fmt.Println("Article Not Exists")
+			return errors.New("文章不存在！")
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("Successfully Delete article ", id)
 }
 
 func GetArticles(p int) {
@@ -141,14 +164,14 @@ func GetArticles(p int) {
 			c := b.Cursor()
 			k, v := c.Seek(itob(IdIndex))
 			if k == nil {
-				fmt.Println("Page is out of index")
-				return errors.New("Page is out of index")
+				fmt.Println("页面索引出错！")
+				return errors.New("页面索引出错！")
 			}
 			key := binary.BigEndian.Uint64(k)
 			fmt.Print(key)
 			if int(key) != IdIndex {
-				fmt.Println("Page is out of index")
-				return errors.New("Page is out of index")
+				fmt.Println("页面索引出错！")
+				return errors.New("页面索引出错！")
 			}
 			count := 0
 			var ori_artc sw.Article
@@ -164,7 +187,7 @@ func GetArticles(p int) {
 			}
 			return nil
 		} else {
-			return errors.New("Article Not Exists")
+			return errors.New("文章不存在！")
 		}
 	})
 	for i := 0; i < len(articles.Articles); i++ {
@@ -172,38 +195,10 @@ func GetArticles(p int) {
 	}
 }
 
-func DeleteArticleById(id int) {
-	//connect to database
-	db, err := bolt.Open("my.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	//delete the article by ID
-	err = db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("Article"))
-		if b != nil {
-			c := b.Cursor()
-			c.Seek(itob(id))
-			err := c.Delete()
-			if err != nil {
-				//fmt.Println("Delete article failed")
-				//log.Fatal(err)
-				return errors.New("Delete article failed")
-			}
-		} else {
-			//fmt.Println("Article Not Exists")
-			return errors.New("Article Not Exists")
-		}
-		return nil
-	})
-
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	fmt.Println("Successfully Delete article ", id)
+func itob(value int) []byte {
+	bytes := make([]byte, 8)
+	binary.BigEndian.PutUint64(bytes, uint64(value))
+	return bytes
 }
 
 func DBTestArticle() {
