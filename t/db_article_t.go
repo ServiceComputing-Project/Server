@@ -21,11 +21,6 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-func itob(value int) []byte {
-	bytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(bytes, uint64(value))
-	return bytes
-}
 
 func CreateTable() {
 	db, err := bolt.Open("my.db", 0600, nil)
@@ -120,6 +115,38 @@ func GetArticleById(id int) {
 	})
 }
 
+func DeleteArticleById(id int) {
+	//connect to database
+	db, err := bolt.Open("my.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	//delete the article by ID
+	err = db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("Article"))
+		if b != nil {
+			c := b.Cursor()
+			c.Seek(itob(id))
+			err := c.Delete()
+			if err != nil {
+				//log.Fatal(err)
+				return errors.New("删除文章出错！")
+			}
+		} else {
+			//fmt.Println("Article Not Exists")
+			return errors.New("文章不存在！")
+		}
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("Successfully Delete article ", id)
+}
+
 func GetArticles(p int) {
 	db, err := bolt.Open("my.db", 0600, nil)
 	if err != nil {
@@ -168,36 +195,10 @@ func GetArticles(p int) {
 	}
 }
 
-func DeleteArticleById(id int) {
-	//connect to database
-	db, err := bolt.Open("my.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	//delete the article by ID
-	err = db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("Article"))
-		if b != nil {
-			c := b.Cursor()
-			c.Seek(itob(id))
-			err := c.Delete()
-			if err != nil {
-				//log.Fatal(err)
-				return errors.New("删除文章出错！")
-			}
-		} else {
-			//fmt.Println("Article Not Exists")
-			return errors.New("文章不存在！")
-		}
-		return nil
-	})
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	fmt.Println("Successfully Delete article ", id)
+func itob(value int) []byte {
+	bytes := make([]byte, 8)
+	binary.BigEndian.PutUint64(bytes, uint64(value))
+	return bytes
 }
 
 func DBTestArticle() {
