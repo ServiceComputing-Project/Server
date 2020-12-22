@@ -1,3 +1,3 @@
-xixi
-2019.11.30 20:31
-没写清楚
+STONEsh
+2019.08.01 11:24
+你好，我用uiview做了个自定义视图，里边有uitextfield然后运行发现IQkeyboardmanager没有起作用，是因为uitextfield被包住的原因吗？
