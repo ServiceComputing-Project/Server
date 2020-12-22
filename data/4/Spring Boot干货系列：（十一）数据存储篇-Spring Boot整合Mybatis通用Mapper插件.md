@@ -9,6 +9,7 @@ Java： 1.8
 Thymeleaf： 3.0.7.RELEASE
 Vue.js： v2.5.11
 ## 数据源依赖
+
 这里我们还是使用阿里巴巴的druid来当数据库连接池，发现这个有对应的监控界面，我们可以开启。
 
 druid官方文档：https://github.com/alibaba/druid/wiki/常见问题
