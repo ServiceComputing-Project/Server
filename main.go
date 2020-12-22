@@ -16,7 +16,7 @@ import (
 	//    sw "github.com/myname/myrepo/go"
 	//
 	sw "github.com/ServiceComputing-Project/Server/go"
-	t "github.com/ServiceComputing-Project/Server/t"
+	t "github.com/ServiceComputing-Project/Server/test"
 )
 
 func main() {
